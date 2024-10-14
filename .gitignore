@@ -1,6 +1,4 @@
-# create file
 package-lock.json
-node_modules
 
 # Logs
 logs
