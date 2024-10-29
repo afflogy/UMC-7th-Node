@@ -2,7 +2,7 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import { handleUserRegister } from "./controllers/user.controller.js";
-import express from 'express';          // -> ES Module
+import express from "express";          // -> ES Module
 
 dotenv.config();
 
@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
   res.send('Hello UMC Sooni!');
 });
 
-app.post("/api/acoount/register", handleUserRegister);
+app.post("/api/account/register", handleUserRegister);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

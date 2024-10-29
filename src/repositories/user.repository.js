@@ -5,8 +5,8 @@ export const addUser = async (data) => {
 
   try {
     const [confirm] = await pool.query(
-      `SELECT EXISTS(SELECT 1 FROM user WHERE user_id = ?) as isExistID;`,
-      data.user_id
+      `SELECT EXISTS(SELECT 1 FROM user WHERE email = ?) as isExistEmail;`,
+      data.email
     );
 
     if (confirm[0].isExistEmail) {
@@ -14,18 +14,23 @@ export const addUser = async (data) => {
     }
 
     const [result] = await pool.query(
-      `INSERT INTO user (user_id, user_name, password, phone_num, email) VALUES (?, ?, ?, ?, ?);`,
+      `INSERT INTO user (user_id, name, password, phone_num, email, gender, address, birth_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?);`,
       [
         data.user_id,
-        data.user_name,
+        data.name,
         data.password,
         data.phone_num,
         data.email,
+        data.gender,
+        data.address,
+        data.birth_date,
+        data.preferences,
       ]
     );
 
-    return result.insertId;
+    return result.insultId;
   } catch (err) {
+    console.error('Error in addUser:', err);
     throw new Error(
       `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
     );
@@ -36,11 +41,11 @@ export const addUser = async (data) => {
 
 
 
-export const getUser = async (user_Id) => {
+export const getUser = async (userId) => {
   const conn = await pool.getConnection();
 
   try {
-    const [user] = await pool.query(`SELECT * FROM user WHERE user_id = ?;`, user_Id);
+    const [user] = await pool.query(`SELECT * FROM user WHERE user_id = ?;`, [userId]);
 
     console.log(user);
 
@@ -50,7 +55,8 @@ export const getUser = async (user_Id) => {
 
     return user;
   } catch (err) {
-    throw new Error(
+      console.error('Error in getUser:', err);
+      throw new Error(
       `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
     );
   } finally {
@@ -69,6 +75,7 @@ export const setPreference = async (userId, categoryId) => {
 
     return;
   } catch (err) {
+    console.error('Error in setPreference:', err);
     throw new Error(
       `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`
     );
@@ -85,9 +92,9 @@ export const getUserPreferencesByUserId = async (userId) => {
   try {
     const [preferences] = await pool.query(
       "SELECT uc.user_id, uc.category_id, c.group " +
-      "FROM user_category uc JOIN category c on uc.category_id = c.category_id " +
+      "FROM usercategory uc JOIN category c on uc.category_id = c.category_id " +
       "WHERE uc.user_id = ? ORDER BY uc.category_id ASC;",
-      userId
+      [userId]
     );
 
     return preferences;
