@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { handleUserRegister } from "./controllers/user.controller.js";
 import { handleAddStore } from "./controllers/store.controller.js"
+import { handleAddReview } from "./controllers/review.controller.js";
 import express from "express";          // -> ES Module
 
 dotenv.config();
@@ -19,9 +20,14 @@ app.get('/', (req, res) => {
   res.send('Hello UMC Sooni!');
 });
 
+// 회원가입 API
 app.post("/api/account/register", handleUserRegister);
 
+// 가게 추가 API
 app.post("/api/stores", handleAddStore);
+
+// 가게 리뷰 추가 API
+app.post("/api/stores/{storeId}/review", handleAddReview);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
