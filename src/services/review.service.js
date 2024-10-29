@@ -16,5 +16,6 @@ export const addReviewService = async (data) => {
     image: data.image,
   });
 
-  return responseFromReview({ data });
+  const review = await getReviewById(reviewId);
+  return responseFromReview({ review });
 };

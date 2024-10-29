@@ -3,6 +3,8 @@ import { addReviewService } from "../services/review.service.js";
 import { bodyToReview } from "../dtos/review.dto.js";
 
 export const handleAddReview = async (req, res, next) => {
+  console.log("body:", req.body);
+  
   try {
     const { storeId } = req.params;
     const reviewData = bodyToReview(req.body, storeId);

@@ -10,6 +10,7 @@ export const handleAddStore = async (req, res, next) => {
     const store = await addStoreService(bodyToStore(req.body));
     res.status(StatusCodes.CREATED).json({ result: store });
   } catch (error) {
-    next(error);
+    console.error("Error in handleAddStore:", error);
+    res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
   }
 };

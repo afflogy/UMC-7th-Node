@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import { handleUserRegister } from "./controllers/user.controller.js";
 import { handleAddStore } from "./controllers/store.controller.js"
 import { handleAddReview } from "./controllers/review.controller.js";
+import { handleAddMission } from "./controllers/mission.controller.js"
 import express from "express";          // -> ES Module
 
 dotenv.config();
@@ -28,6 +29,9 @@ app.post("/api/stores", handleAddStore);
 
 // 가게 리뷰 추가 API
 app.post("/api/stores/{storeId}/review", handleAddReview);
+
+// 가게 미션 추가 API
+app.post("/api/stores/{storeId}/mission", handleAddMission);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
