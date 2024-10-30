@@ -5,6 +5,7 @@ import { handleUserRegister } from "./controllers/user.controller.js";
 import { handleAddStore } from "./controllers/store.controller.js"
 import { handleAddReview } from "./controllers/review.controller.js";
 import { handleAddMission } from "./controllers/mission.controller.js"
+import { handleOngoingMission } from "./controllers/mission.controller.js"
 import express from "express";          // -> ES Module
 
 dotenv.config();
@@ -31,7 +32,10 @@ app.post("/api/stores", handleAddStore);
 app.post("/api/stores/{storeId}/review", handleAddReview);
 
 // 가게 미션 추가 API
-app.post("/api/stores/{storeId}/mission", handleAddMission);
+app.post("/api/stores/{storeId}/mission", handleOngoingMission);
+
+// 미션을 도전 중으로 변경 API
+app.post("/api/store/{store_id}/missions/{mission_id}", handleOngoingMission);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

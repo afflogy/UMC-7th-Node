@@ -15,3 +15,15 @@ export const handleAddMission = async (req, res, next) => {
         res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
     }
 }
+
+export const handleOngoingMission = async (req, res) => {
+    const { store_id, mission_id } = req.params;
+  
+    try {
+      const mission = await makeMissionOngoingService(store_id, mission_id);
+      res.status(StatusCodes.OK).json({ result: mission });
+    } catch (error) {
+      console.error("Error in handleMakeMissionOngoing:", error);
+      res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
+    }
+  };

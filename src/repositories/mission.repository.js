@@ -40,3 +40,35 @@ export const checkStoreExists = async (storeId) => {
       conn.release();
     }
   };
+
+//도전 중인 미션으로 변경 API
+export const checkMissionOngoing = async (storeId, missionId) => {
+  const conn = await pool.getConnection();
+  try {
+    const [rows] = await conn.query(
+      `SELECT mission_state FROM missionstate WHERE store_id = ? AND mission_id = ? AND mission_state = 1;`,
+      [storeId, missionId]
+    );
+    return rows.length > 0;
+  } finally {
+    conn.release();
+  }
+};
+s
+export const setOngoingMission = async (storeId, missionId) => {
+  const conn = await pool.getConnection();
+  try {
+    await conn.query(
+      `UPDATE missionstate SET mission_state = 1 WHERE store_id = ? AND mission_id = ?;`,
+      [storeId, missionId]
+    );
+
+    const [updatedMission] = await conn.query(
+      `SELECT * FROM missionstate WHERE store_id = ? AND mission_id = ?;`,
+      [storeId, missionId]
+    );
+    return updatedMission[0];
+  } finally {
+    conn.release();
+  }
+};
