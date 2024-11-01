@@ -2,7 +2,7 @@ import { responseFromUser } from "../dtos/user.dto.js";
 import {
   addUser,
   getUserById,
-  getUserPreferencByUserId,
+  getUserPreferenceByUserId,
   setPreference,
 } from "../repositories/user.repository.js";
 
@@ -21,13 +21,13 @@ export const userRegister = async (data) => {
     throw new Error("이미 존재하는 이메일입니다.");
   }
 
-  if (data.preference && Array.isArray(data.preference)) {
-    for (const preference of data.preference) {
+  if (data.preferences && Array.isArray(data.preferences)) {
+    for (const preference of data.preferences) {
       await setPreference(joinUserId, preference);
   }
 
   const user = await getUserById(joinUserId);
-  const preference = await getUserPreferencByUserId(joinUserId);
+  const preference = await getUserPreferenceByUserId(joinUserId);
 
   return responseFromUser({ user, preference });
   }

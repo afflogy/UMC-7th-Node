@@ -15,4 +15,4 @@ export const pool = mysql.createPool({
     queueLimit: 0,
   });
   
-  export const prisma = new PrismaClient();
+  export const prisma = new PrismaClient({ log: ["query"] });

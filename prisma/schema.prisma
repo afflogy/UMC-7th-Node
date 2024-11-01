@@ -16,14 +16,34 @@ datasource db {
 model User {
   user_id       BigInt   @id @default(autoincrement())
   name          String   @db.VarChar(10)
-  phone         String   @map("phone_number") @db.VarChar(20)
+  phone_num     String   @map("phone_num") @db.VarChar(20)
   email         String   @unique(map: "email") @db.VarChar(30)
   password      String   @db.VarChar(40)
-  gender        Boolean  @db.TinyInt
-  birth         DateTime @map("birth_date") @db.Date
+  gender        Int      @map("gender") @db.TinyInt
+  birth_date    String   @db.VarChar(30)
   address       String   @db.VarChar(50)
-  activation    Boolean  @db.TinyInt
-  point         Int      @map("user_point")
+
+  userCategories UserCategory[]
 
   @@map("user")
+}
+
+model Category {
+  category_id   BigInt  @id @default(autoincrement())
+  group         String  @db.VarChar(100)
+
+  userCategories UserCategory[]
+
+  @@map("category")
+}
+
+model UserCategory {
+  user_id     BigInt
+  category_id BigInt
+
+  user      User     @relation(fields: [user_id], references: [user_id])
+  category  Category @relation(fields: [category_id], references: [category_id])
+
+  @@id([user_id, category_id])
+  @@map("usercategory")
 }
