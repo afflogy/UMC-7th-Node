@@ -2,20 +2,19 @@ export const bodyToUser = (body) => {
     const birth_date = new Date(body.birth_date); //생일은 Date로 파싱해서 변환 가능
     
     return {
-      user_id: body.user_id,
       name: body.name,
-      password: body.password,
       phone_num: body.phone_num,
       email: body.email,
+      password: body.password,
       gender : body.gender,
-      address : body.address || "",
       birth_date,
-      preferences: body.preferences,
+      address : body.address || "",
+      preference: body.preference,
     };
   };
 
 
-export const responseFromUser = ({ user, preferences }) => {
+export const responseFromUser = ({ user, preference }) => {
 
   const userData = user[0];
 
@@ -33,16 +32,17 @@ export const responseFromUser = ({ user, preferences }) => {
     10: "야식"
   };
 
-  const preferCategory = preferences.map(pref => categoryMapping[pref.category_id]);
+  const preferCategory = preference.map(pref => categoryMapping[pref.category_id]);
 
   return {
     result: {
-      email: userData.email,
       name: userData.name,
       phone_num: userData.phone_num,
+      email: userData.email,
+      password: userData.password,
       gender: userData.gender,
-      address: userData.address,
       birth_date: userData.birth_date,
+      address: userData.address,
       preferCategory
     }
   };

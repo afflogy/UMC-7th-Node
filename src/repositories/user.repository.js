@@ -13,22 +13,20 @@ export const addUser = async (data) => {
       return null;
     }
 
-    const [result] = await pool.query(
-      `INSERT INTO user (user_id, name, password, phone_num, email, gender, address, birth_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?);`,
+    const [userResult] = await pool.query(
+      `INSERT INTO user (name, phone_num, email, password, gender, birth_date, address) VALUES (?, ?, ?, ?, ?, ?, ?);`,
       [
-        data.user_id,
         data.name,
-        data.password,
         data.phone_num,
         data.email,
+        data.password,
         data.gender,
-        data.address,
         data.birth_date,
-        data.preferences,
+        data.address,
       ]
     );
 
-    return result.insultId;
+    return userResult.insultId;
   } catch (err) {
     console.error('Error in addUser:', err);
     throw new Error(
@@ -40,8 +38,7 @@ export const addUser = async (data) => {
 };
 
 
-
-export const getUser = async (userId) => {
+export const getUserById = async (userId) => {
   const conn = await pool.getConnection();
 
   try {
@@ -70,7 +67,10 @@ export const setPreference = async (userId, categoryId) => {
   try {
     await pool.query(
       `INSERT INTO usercategory (user_id, category_id) VALUES (?, ?);`,
-      [userId, categoryId]
+      [
+        userId,
+        categoryId
+      ]
     );
 
     return;
@@ -86,18 +86,18 @@ export const setPreference = async (userId, categoryId) => {
 
 
 
-export const getUserPreferencesByUserId = async (userId) => {
+export const getUserPreferencByUserId = async (userId) => {
   const conn = await pool.getConnection();
 
   try {
-    const [preferences] = await pool.query(
+    const [preference] = await pool.query(
       "SELECT uc.user_id, uc.category_id, c.group " +
       "FROM usercategory uc JOIN category c on uc.category_id = c.category_id " +
       "WHERE uc.user_id = ? ORDER BY uc.category_id ASC;",
       [userId]
     );
 
-    return preferences;
+    return preference;
   } catch (err) {
     throw new Error(
       `오류가 발생했어요. 요청 파라미터를 확인해주세요. (${err})`

@@ -54,7 +54,7 @@ export const checkMissionOngoing = async (storeId, missionId) => {
     conn.release();
   }
 };
-s
+
 export const setOngoingMission = async (storeId, missionId) => {
   const conn = await pool.getConnection();
   try {

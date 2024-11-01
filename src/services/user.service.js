@@ -1,35 +1,34 @@
 import { responseFromUser } from "../dtos/user.dto.js";
 import {
   addUser,
-  getUser,
-  getUserPreferencesByUserId,
+  getUserById,
+  getUserPreferencByUserId,
   setPreference,
 } from "../repositories/user.repository.js";
 
 export const userRegister = async (data) => {
   const joinUserId = await addUser({
-    user_id: data.user_id,
     name: data.name,
-    password: data.password,
     phone_num: data.phone_num,
     email: data.email,
+    password: data.password,
     gender : data.gender,
+    birth_date : data.birth_date,
     address : data.address,
-    birth_date : data.birth_date
   });
 
   if (joinUserId === null) {
     throw new Error("이미 존재하는 이메일입니다.");
   }
 
-  if (data.preferences && Array.isArray(data.preferences)) {
-    for (const preference of data.preferences) {
+  if (data.preference && Array.isArray(data.preference)) {
+    for (const preference of data.preference) {
       await setPreference(joinUserId, preference);
-    }
   }
 
-  const user = await getUser(joinUserId);
-  const preferences = await getUserPreferencesByUserId(joinUserId);
+  const user = await getUserById(joinUserId);
+  const preference = await getUserPreferencByUserId(joinUserId);
 
-  return responseFromUser({ user, preferences });
+  return responseFromUser({ user, preference });
+  }
 };

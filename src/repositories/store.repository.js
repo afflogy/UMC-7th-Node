@@ -9,19 +9,10 @@ export const addStoreWithRegion = async (data) => {
       [data.region]
     );
 
-    let mapId;
-
     if (mapResult.length === 0) {
-      const [insertMapResult] = await conn.query(
-        `INSERT INTO map (region, created_at) VALUES (?, NOW());`,
-        [data.region]
-      );
-      mapId = insertMapResult.insertId;
-    } else {
-
-      mapId = mapResult[0].map_id;
+      throw new Error("입력한 region에 해당하는 map_id를 찾을 수 없습니다.")
     }
-
+    const mapId = mapResult[0].map_id;
 
     const [storeCheck] = await conn.query(
       `SELECT EXISTS(SELECT 1 FROM store WHERE name = ?) AS isExistStore;`,
@@ -33,12 +24,13 @@ export const addStoreWithRegion = async (data) => {
     }
 
     const [storeResult] = await conn.query(
-      `INSERT INTO store (map_id, name, store_address, store_num, created_at) VALUES (?, ?, ?, ?, NOW());`,
+      `INSERT INTO store (map_id, name, store_num, region, store_address) VALUES (?, ?, ?, ?, ?);`,
       [
         mapId, 
-        data.name, 
+        data.name,
+        data.store_num,
+        data.region,
         data.store_address, 
-        data.store_num
       ]
     );
 
