@@ -14,36 +14,146 @@ datasource db {
 }
 
 model User {
-  user_id       BigInt   @id @default(autoincrement())
-  name          String   @db.VarChar(10)
-  phone_num     String   @map("phone_num") @db.VarChar(20)
-  email         String   @unique(map: "email") @db.VarChar(30)
-  password      String   @db.VarChar(40)
-  gender        Int      @map("gender") @db.TinyInt
-  birth_date    String   @db.VarChar(30)
-  address       String   @db.VarChar(50)
-
+  id            BigInt        @id @default(autoincrement())
+  name          String        @db.VarChar(10)
+  phoneNum      String        @map("phone_num") @db.VarChar(20)
+  email         String        @db.VarChar(30)
+  password      String        @db.VarChar(40)
+  gender        Int
+  birthDate     String        @map("birth_date") @db.VarChar(20)
+  address       String        @db.VarChar(50)
+  activation    Boolean       @default(true)
+  userPoint     Int           @default(0) @map("user_point")
+  createdAt     DateTime      @map("created_at") @default(now())
+  updatedAt     DateTime      @updatedAt @map("updated_at") @default(now())
+  reviews       Review[]
+  missionStates MissionState[]
   userCategories UserCategory[]
+  pointStates   PointState[]
+  userRegionMissions UserRsgionMission[]
+  payStates     PayState[]
+}
 
-  @@map("user")
+model Mission {
+  id            BigInt        @id @default(autoincrement())
+  storeId       BigInt        @map("store_id")
+  content       String        @db.Text
+  mAmount       Int           @map("m_amount")
+  mPoint        Int           @map("m_point")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime?     @updatedAt @map("updated_at")
+  store         Store         @relation(fields: [storeId], references: [id])
+  missionStates MissionState[]
+  pointStates   PointState[]
+}
+
+model Review {
+  id            BigInt        @id @default(autoincrement())
+  userId        BigInt        @map("user_id")
+  storeId       BigInt        @map("store_id")
+  title         String
+  content       String        @db.Text
+  score         Decimal       @db.Decimal(2, 1)
+  image         String?       @db.VarChar(50)
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime?     @updatedAt @map("updated_at")
+  user          User          @relation(fields: [userId], references: [id])
+  store         Store         @relation(fields: [storeId], references: [id])
+}
+
+model Store {
+  id            BigInt        @id @default(autoincrement())
+  mapId         BigInt        @map("map_id")
+  name          String
+  storeNum      String        @map("store_num")
+  storeAddress  String        @map("store_address")
+  grade         Decimal       @default(0.0) @db.Decimal(2, 1)
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime?     @updatedAt @map("updated_at")
+  map           Map           @relation(fields: [mapId], references: [id])
+  missions      Mission[]
+  reviews       Review[]
+  storeCategories StoreCategory[]
+  payStates     PayState[]
+}
+
+model Map {
+  id            BigInt        @id @default(autoincrement())
+  region        String
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime?     @updatedAt @map("updated_at")
+  stores        Store[]
+  userRegionMissions UserRsgionMission[]
+}
+
+model MissionState {
+  id            BigInt        @id @default(autoincrement())
+  missionId     BigInt        @map("mission_id")
+  userId        BigInt        @map("user_id")
+  missionState  Boolean       @default(false) @map("mission_state")
+  completedAt   DateTime?     @map("completed_at")
+  mission       Mission       @relation(fields: [missionId], references: [id])
+  user          User          @relation(fields: [userId], references: [id])
 }
 
 model Category {
-  category_id   BigInt  @id @default(autoincrement())
-  group         String  @db.VarChar(100)
-
+  id            BigInt        @id @default(autoincrement())
+  group         String        @db.VarChar(50)
   userCategories UserCategory[]
-
-  @@map("category")
+  storeCategories StoreCategory[]
 }
 
 model UserCategory {
-  user_id     BigInt
-  category_id BigInt
+  userId        BigInt        @map("user_id")
+  categoryId    BigInt        @map("category_id")
+  user          User          @relation(fields: [userId], references: [id])
+  category      Category      @relation(fields: [categoryId], references: [id])
 
-  user      User     @relation(fields: [user_id], references: [user_id])
-  category  Category @relation(fields: [category_id], references: [category_id])
+  @@id([userId, categoryId])
+}
 
-  @@id([user_id, category_id])
-  @@map("usercategory")
+model StoreCategory {
+  categoryId    BigInt        @map("category_id")
+  storeId       BigInt        @map("store_id")
+  category      Category      @relation(fields: [categoryId], references: [id])
+  store         Store         @relation(fields: [storeId], references: [id])
+
+  @@id([categoryId, storeId])
+}
+
+model PointState {
+  id            BigInt        @id @default(autoincrement())
+  points        Int           @default(0)
+  transactionType TransactionType @default(EARN) @map("transaction_type")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+  missionId     BigInt        @map("mission_id")
+  userId        BigInt        @map("user_id")
+  mission       Mission       @relation(fields: [missionId], references: [id])
+  user          User          @relation(fields: [userId], references: [id])
+}
+
+model UserRsgionMission {
+  id            BigInt        @id @default(autoincrement()) @map("region_mcount_id")
+  completedMissionCount Int   @default(0) @map("completed_mission_count")
+  rewardPoint   Boolean       @default(false) @map("reward_point")
+  mapId         BigInt        @map("map_id")
+  userId        BigInt        @map("user_id")
+  map           Map           @relation(fields: [mapId], references: [id])
+  user          User          @relation(fields: [userId], references: [id])
+}
+
+model PayState {
+  id            BigInt        @id @default(autoincrement()) @map("pay_id")
+  userId        BigInt        @map("user_id")
+  storeId       BigInt        @map("store_id")
+  payState      Boolean       @default(false) @map("pay_state")
+  paidAmount    Int?          @map("paid_amount")
+  completedAt   DateTime?     @map("completed_at")
+  user          User          @relation(fields: [userId], references: [id])
+  store         Store         @relation(fields: [storeId], references: [id])
+}
+
+enum TransactionType {
+  EARN
+  USE
 }

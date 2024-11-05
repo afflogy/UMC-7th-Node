@@ -9,11 +9,11 @@ import {
 export const userRegister = async (data) => {
   const joinUserId = await addUser({
     name: data.name,
-    phone_num: data.phone_num,
+    phoneNum: data.phoneNum,
     email: data.email,
     password: data.password,
     gender : data.gender,
-    birth_date : data.birth_date,
+    birthDate : data.birthDate,
     address : data.address,
   });
 

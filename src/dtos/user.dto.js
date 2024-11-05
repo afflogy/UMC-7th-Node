@@ -1,13 +1,11 @@
 export const bodyToUser = (body) => {
-    const birth_date = new Date(body.birth_date); //생일은 Date로 파싱해서 변환 가능
-    
     return {
       name: body.name,
-      phone_num: body.phone_num,
+      phoneNum: body.phoneNum,
       email: body.email,
       password: body.password,
       gender : body.gender,
-      birth_date,
+      birthDate : body.birthDate,
       address : body.address || "",
       preference: body.preference,
     };
