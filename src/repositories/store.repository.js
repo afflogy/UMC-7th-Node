@@ -13,7 +13,13 @@ export const addStoreWithRegion = async (data) => {
       return null;
     }
 
-    const created = await prisma.store.create({data: data});
+    const created = await prisma.store.create({
+      data: {
+        name: data.name,
+        storeNum: data.storeNum,
+        storeAddress: data.storeAddress,
+        mapId: map.id
+      }});
     return created.store_id;
 };
 

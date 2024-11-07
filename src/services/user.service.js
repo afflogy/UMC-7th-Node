@@ -32,3 +32,31 @@ export const userRegister = async (data) => {
   return responseFromUser({ user, preference });
   }
 };
+
+// 사용자 리뷰 리스트 조회
+export const getUserReview = async (userId) => {
+
+  const reviews = await prisma.review.findMany({
+    where: {
+      user_id: userId
+    },
+    include: {
+      store: {
+        select: {
+          name: true,
+          store_address: true
+        }
+      },
+      user: {
+        select: {
+          name: true
+        }
+      }
+    },
+    orderBy: {
+      created_at: 'desc'
+    }
+  });
+
+  return reviews;
+}

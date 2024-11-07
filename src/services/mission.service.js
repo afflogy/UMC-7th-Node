@@ -6,8 +6,8 @@ import { responseFromMission } from "../dtos/mission.dto.js";
 export const addMissionService = async (data) => {
     const missionId = await addMission({
         content: data.content,
-        m_amount: data.m_amount,
-        m_point: data.m_point,
+        mAmount: data.mAmount,
+        mPoint: data.mPoint,
     });
   
     const mission = await getMissionById(missionId);

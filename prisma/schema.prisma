@@ -14,7 +14,7 @@ datasource db {
 }
 
 model User {
-  id            BigInt        @id @default(autoincrement())
+  id            Int        @id @default(autoincrement())
   name          String        @db.VarChar(10)
   phoneNum      String        @map("phone_num") @db.VarChar(20)
   email         String        @db.VarChar(30)
@@ -35,8 +35,8 @@ model User {
 }
 
 model Mission {
-  id            BigInt        @id @default(autoincrement())
-  storeId       BigInt        @map("store_id")
+  id            Int        @id @default(autoincrement())
+  storeId       Int        @map("store_id")
   content       String        @db.Text
   mAmount       Int           @map("m_amount")
   mPoint        Int           @map("m_point")
@@ -48,9 +48,9 @@ model Mission {
 }
 
 model Review {
-  id            BigInt        @id @default(autoincrement())
-  userId        BigInt        @map("user_id")
-  storeId       BigInt        @map("store_id")
+  id            Int        @id @default(autoincrement())
+  userId        Int        @map("user_id")
+  storeId       Int        @map("store_id")
   title         String
   content       String        @db.Text
   score         Decimal       @db.Decimal(2, 1)
@@ -62,9 +62,9 @@ model Review {
 }
 
 model Store {
-  id            BigInt        @id @default(autoincrement())
-  mapId         BigInt        @map("map_id")
-  name          String
+  id            Int        @id @default(autoincrement())
+  mapId         Int        @map("map_id")
+  name          String        @db.VarChar(30)
   storeNum      String        @map("store_num")
   storeAddress  String        @map("store_address")
   grade         Decimal       @default(0.0) @db.Decimal(2, 1)
@@ -78,7 +78,7 @@ model Store {
 }
 
 model Map {
-  id            BigInt        @id @default(autoincrement())
+  id            Int        @id @default(autoincrement())
   region        String
   createdAt     DateTime      @default(now()) @map("created_at")
   updatedAt     DateTime?     @updatedAt @map("updated_at")
@@ -87,9 +87,9 @@ model Map {
 }
 
 model MissionState {
-  id            BigInt        @id @default(autoincrement())
-  missionId     BigInt        @map("mission_id")
-  userId        BigInt        @map("user_id")
+  id            Int        @id @default(autoincrement())
+  missionId     Int        @map("mission_id")
+  userId        Int        @map("user_id")
   missionState  Boolean       @default(false) @map("mission_state")
   completedAt   DateTime?     @map("completed_at")
   mission       Mission       @relation(fields: [missionId], references: [id])
@@ -97,15 +97,15 @@ model MissionState {
 }
 
 model Category {
-  id            BigInt        @id @default(autoincrement())
+  id            Int        @id @default(autoincrement())
   group         String        @db.VarChar(50)
   userCategories UserCategory[]
   storeCategories StoreCategory[]
 }
 
 model UserCategory {
-  userId        BigInt        @map("user_id")
-  categoryId    BigInt        @map("category_id")
+  userId        Int        @map("user_id")
+  categoryId    Int        @map("category_id")
   user          User          @relation(fields: [userId], references: [id])
   category      Category      @relation(fields: [categoryId], references: [id])
 
@@ -113,8 +113,8 @@ model UserCategory {
 }
 
 model StoreCategory {
-  categoryId    BigInt        @map("category_id")
-  storeId       BigInt        @map("store_id")
+  categoryId    Int        @map("category_id")
+  storeId       Int        @map("store_id")
   category      Category      @relation(fields: [categoryId], references: [id])
   store         Store         @relation(fields: [storeId], references: [id])
 
@@ -122,30 +122,30 @@ model StoreCategory {
 }
 
 model PointState {
-  id            BigInt        @id @default(autoincrement())
+  id            Int        @id @default(autoincrement())
   points        Int           @default(0)
   transactionType TransactionType @default(EARN) @map("transaction_type")
   updatedAt     DateTime      @updatedAt @map("updated_at")
-  missionId     BigInt        @map("mission_id")
-  userId        BigInt        @map("user_id")
+  missionId     Int        @map("mission_id")
+  userId        Int        @map("user_id")
   mission       Mission       @relation(fields: [missionId], references: [id])
   user          User          @relation(fields: [userId], references: [id])
 }
 
 model UserRsgionMission {
-  id            BigInt        @id @default(autoincrement()) @map("region_mcount_id")
+  id            Int        @id @default(autoincrement()) @map("region_mcount_id")
   completedMissionCount Int   @default(0) @map("completed_mission_count")
   rewardPoint   Boolean       @default(false) @map("reward_point")
-  mapId         BigInt        @map("map_id")
-  userId        BigInt        @map("user_id")
+  mapId         Int        @map("map_id")
+  userId        Int        @map("user_id")
   map           Map           @relation(fields: [mapId], references: [id])
   user          User          @relation(fields: [userId], references: [id])
 }
 
 model PayState {
-  id            BigInt        @id @default(autoincrement()) @map("pay_id")
-  userId        BigInt        @map("user_id")
-  storeId       BigInt        @map("store_id")
+  id            Int        @id @default(autoincrement()) @map("pay_id")
+  userId        Int        @map("user_id")
+  storeId       Int        @map("store_id")
   payState      Boolean       @default(false) @map("pay_state")
   paidAmount    Int?          @map("paid_amount")
   completedAt   DateTime?     @map("completed_at")

@@ -2,10 +2,17 @@ import { prisma } from "../db.config.js";
 
 // 미션 생성 API
 export const addMission = async (data) => {
-  const store = await prisma.store.findFirst({where: {data: data.store_id}});
+  const store = await prisma.store.findFirst({where: {data: data.storeId}});
 
-  const created = await prisma.mission.create({data: data});
-  return result.create.mission_id;
+  const created = await prisma.mission.create({
+    data: {
+      storeId: store.id,
+      content: data.content,
+      mAmount: data.mAmount,
+      mPoint: data.mPoint
+    }
+  });
+  return result.create.missionId;
 
 };
 

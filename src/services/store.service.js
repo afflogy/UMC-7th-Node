@@ -1,12 +1,13 @@
-import { responseFromStore, responseFromReview } from "../dtos/store.dto.js";
+import { responseFromStore } from "../dtos/store.dto.js";
 import { addStoreWithRegion,getStoreById } from "../repositories/store.repository.js";
 
+// 가게 생성 API
 export const addStoreService = async (data) => {
   const addedStoreId = await addStoreWithRegion({
     name: data.name,
-    store_address: data.store_address,
-    store_num: data.store_num,
+    storeNum: data.storeNum,
     region: data.region,
+    storeAddress: data.storeAddress,
   });
 
   if (addedStoreId === null) {
