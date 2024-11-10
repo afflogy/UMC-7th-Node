@@ -5,7 +5,7 @@ import { handleUserRegister } from "./controllers/user.controller.js";
 import { handleAddStore } from "./controllers/store.controller.js"
 import { handleAddReview, handleGetUserReview } from "./controllers/review.controller.js";
 import { handleAddMission } from "./controllers/mission.controller.js"
-import { handleOngoingMission, handleGetStoreMission } from "./controllers/mission.controller.js"
+import { handleOngoingMission, handleGetStoreMission, handleGetUserOngoingMission } from "./controllers/mission.controller.js"
 import express from "express";          // -> ES Module
 
 dotenv.config();
@@ -38,10 +38,13 @@ app.post("/api/stores/:storeId/mission", handleAddMission);
 app.post("/api/users/:userId/missions/:missionId", handleOngoingMission);
 
 // 사용자 리뷰 조회 API
-app.get("api/users/:userId/review", handleGetUserReview);
+app.get("/api/users/:userId/review", handleGetUserReview);
 
 // 특정 가게 미션 목록 조회 API
-app.get("api/stores/:storeId/mission", handleGetStoreMission);
+app.get("/api/stores/:storeId/mission", handleGetStoreMission);
+
+// 내가 진행 중인 미션 목록 조회 API
+app.get("/api/users/:userId/mission/:state", handleGetUserOngoingMission);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

@@ -1,6 +1,8 @@
 import { StatusCodes } from "http-status-codes";
 import { addMissionService,
-         makeMissionOngoingService } from "../services/mission.service.js";
+         makeMissionOngoingService,
+         getStoreMissionService,
+         getUserOngoingMissionService } from "../services/mission.service.js";
 import { bodyToMission } from "../dtos/mission.dto.js";
 
 // 가게에 미션 생성
@@ -42,3 +44,20 @@ export const handleGetStoreMission = async (req, res) => {
     res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
   }
 }
+
+
+// 사용자 진행 중 미션 조회
+export const handleGetUserOngoingMission = async (req, res) => {
+  try{
+    const userId = parseInt(req.params.userId, 10);
+    const state = req.params.state === 'true' || req.params.state === '1';
+    const result = await getUserOngoingMissionService(userId, state);
+    res.status(StatusCodes.OK).json(result);
+  } catch (error) {
+    console.error("Error in handleGetUserOngoingMission:", error);
+    res.status(StatusCodes.BAD_REQUEST).json({
+      success: false,
+      error: error.message
+    });
+  }
+};

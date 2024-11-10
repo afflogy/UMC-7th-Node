@@ -1,8 +1,12 @@
 import { addMission,
          getMissionById,
          setOngoingMission,
-         getStoreMission } from "../repositories/mission.repository.js";
-import { responseFromMission, responseFromMissionList } from "../dtos/mission.dto.js";
+         getStoreMission,
+         getUserOngoingMissions } from "../repositories/mission.repository.js";
+         
+import { responseFromMission,
+         responseFromStoreMission,
+         responseFromUserMissionList } from "../dtos/mission.dto.js";
 
 // 미션 생성 API
 export const addMissionService = async (data) => {
@@ -31,5 +35,11 @@ export const makeMissionOngoingService = async (userId, missionId) => {
 // 미션 목록 조회
 export const getStoreMissionService = async (storeId) => {
   const missions = await getStoreMission(storeId);
-  return responseFromMissionList({ missions });
+  return responseFromStoreMission({ missions });
 }
+
+// 진행 중인 미션 조회
+export const getUserOngoingMissionService = async(userId, state) => {
+  const ongoingMissions = await getUserOngoingMissions(userId, state);
+  return responseFromUserMissionList({ missions: ongoingMissions });
+};

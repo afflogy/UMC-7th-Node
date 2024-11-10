@@ -57,3 +57,29 @@ export const getStoreMission = async (storeId) => {
 
   return missions;
 };
+
+// 사용자가 진행 중인 미션 조회
+export const getUserOngoingMissions = async (userId, state) => {
+  const missions = await prisma.missionState.findMany({
+    where: {
+      userId: userId,
+      missionState: state
+    },
+    include: {
+      mission: {
+        include: {
+          store: {
+            select: {
+              name: true
+            }
+          }
+        }
+      }
+    },
+    orderBy: {
+      userId: 'desc'
+    }
+  });
+
+  return missions;
+};
