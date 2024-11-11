@@ -1,4 +1,4 @@
-export const bodyToUser = ({ body }) => {
+export const bodyToUser = ( body ) => {
     return {
       name: body.name,
       phoneNum: body.phoneNum,
