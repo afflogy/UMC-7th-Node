@@ -18,6 +18,14 @@ const port = process.env.PORT;
  * 공통 응답을 사용할 수 있는 헬퍼 함수 등록
  */
 app.use((req, res, next) => {
+
+  res.create = (create) => {
+    return res.json({
+      resultType: "CREATE",
+      error: null,
+      create});
+  };
+
   res.success = (success) => {
     return res.json({ 
       resultType: "SUCCESS", 

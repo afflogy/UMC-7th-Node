@@ -20,12 +20,12 @@ export const addStoreWithRegion = async (data) => {
         storeAddress: data.storeAddress,
         mapId: map.id
       }});
-    return created.store_id;
+    return created.id;
 };
 
 
 export const getStoreById = async (storeId) => {
-  const store = await prisma.store.findFirstOrThrow({where: {store_id: storeId}})
+  const store = await prisma.store.findFirstOrThrow({where: {id: storeId}})
   return store;
 };
 

@@ -9,8 +9,8 @@ export const bodyToStore = (body) => {
   
  export const responseFromStore = ({ store }) => {
    return{
-      store_id: store.storeId,
-      map_id: store.mapId,
+      storeId: store.id,
+      mapId: store.mapId,
       name: store.name,
       storeNum: store.storeNum,
       region: store.region,
