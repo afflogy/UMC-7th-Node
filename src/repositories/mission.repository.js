@@ -3,8 +3,8 @@ import { prisma } from "../db.config.js";
 // 미션 생성 API
 export const addMission = async (data) => {
   const store = await prisma.store.findFirst({where: {id: data.storeId}});
-  if(!store){
-    throw new Error("해당 가게가 존재하지 않습니다.");
+  if(store){
+    null;
   }
 
   const created = await prisma.mission.create({
@@ -15,24 +15,28 @@ export const addMission = async (data) => {
       mPoint: data.mPoint
     }
   });
-  return created.mission_id;
+  return created.id;
 };
 
 export const getMissionById = async (missionId) => {
-  const mission = await prisma.mission.findFirstOrThrow({where: {mission_id: missionId}})
+  const mission = await prisma.mission.findFirstOrThrow({where: {id: missionId}})
   return mission;
 };
 
 //도전 중인 미션 변경 API
 export const setOngoingMission = async (userId, missionId) => {
-  const existingMission = await prisma.missionState.findFirst({where: {userId: userId, missionId: missionId, missionState: true}});
-  
-  if (existingMission) {
-    return true;
-  }
+  const existingMission = await prisma.missionState.findFirst({
+    where: { userId: userId, missionId: missionId, missionState: false },
+  });
 
-  const updatedMission = await prisma.missionState.update({where: {userId_missionId: {userId: userId, missionId: missionId}}, data: {missionState: true}});
-  return updatedMission;
+  if (!existingMission) {
+    const createdMission = await prisma.missionState.create({
+      data: { userId, missionId, missionState: true },
+    });
+    return createdMission;
+  } else {
+    return existingMission;
+  }
 };
 
 
