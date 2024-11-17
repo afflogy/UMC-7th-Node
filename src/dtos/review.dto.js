@@ -31,6 +31,7 @@ export const responseFromReviewList = ({ reviews }) => {
       id: review.store.id,
       name: review.store.name,
     },
+    title: review.title,
     content: review.content,
     score: review.score,
   }));

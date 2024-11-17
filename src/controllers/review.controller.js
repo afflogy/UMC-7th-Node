@@ -38,6 +38,7 @@ export const handleGetUserReview = async (req, res, next) => {
                         reviewId: { type: "number" },
                         store: { type: "object", properties: { name: { type: "string" }, storeAddress: {type: "string"} } },
                         user: { type: "object", properties: { name: { type: "string" } } },
+                        title: { type: "string" },
                         content: { type: "string" },
                         score: { type: "number"}
                       }
