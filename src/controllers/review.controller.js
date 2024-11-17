@@ -2,7 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { addReviewService, getUserReviewService } from "../services/review.service.js";
 import { bodyToReview } from "../dtos/review.dto.js";
 
-// 가게에 리뷰 생성
+// 가게에 리뷰 생성 API
 export const handleAddReview = async (req, res, next) => {
   console.log("body:", req.body);
 
@@ -14,8 +14,43 @@ export const handleAddReview = async (req, res, next) => {
 };
 
 
-// 사용자 리뷰 리스트 조회
+// 사용자 리뷰 리스트 조회 API
 export const handleGetUserReview = async (req, res, next) => {
+    /*
+    #swagger.summary = '사용자 리뷰 목록 조회 API';
+    #swagger.responses[200] = {
+      description: "사용자 리뷰 목록 조회 성공 응답",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string", example: "SUCCESS" },
+              error: { type: "object", nullable: true, example: null },
+              success: {
+                type: "object",
+                properties: {
+                  data: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        reviewId: { type: "number" },
+                        store: { type: "object", properties: { id: { type: "number" }, name: { type: "string" } } },
+                        content: { type: "string" },
+                        score: { type: "number"}
+                      }
+                    }
+                  },
+                  pagination: { type: "object", properties: { cursor: { type: "number", nullable: true } }}
+                }
+              }
+            }
+          }
+        }
+      }
+    };
+  */
 
   const userId = parseInt(req.params.userId, 10);
   const result = await getUserReviewService(userId);

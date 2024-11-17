@@ -20,6 +20,10 @@ export const getUserById = async (userId) => {
 export const setPreference = async (userId, categoryId) => {
   const category = await prisma.category.findFirst({ where: {id:categoryId}});
 
+  if (!category) {
+    throw new Error(`Category with ID ${categoryId} does not exist.`);
+  }
+
   const uc = await prisma.userCategory.create({data: {userId: userId,categoryId: category.id} });
   return uc;
 };
@@ -27,12 +31,11 @@ export const setPreference = async (userId, categoryId) => {
 // 사용자 선호 카테고리 반환
 export const getUserPreferenceByUserId = async (userId) => {
   const preferences = await prisma.userCategory.findMany({
-    select: {
-      userId: true,
-      categoryId: true,
-    },
     where: { userId: userId },
-    orderBy: { categoryId: "asc" }
+    include: {
+      category: true,
+    },
+    orderBy: { categoryId: "asc" },
   });
 
   return preferences;

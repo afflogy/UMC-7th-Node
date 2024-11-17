@@ -12,14 +12,16 @@ export const bodyToUser = ( body ) => {
   };
 
 
-export const responseFromUser = ({ user, preferences }) => {
-  const preferFoods = preferences.map(
-    (preference) => preference.category.name
-  );
+// 사용자 선호 카테고리 반환
+export const getUserPreferenceByUserId = async (userId) => {
+  const preferences = await prisma.userCategory.findMany({
+    where: { userId: userId },
+    include: {
+      category: true,
+    },
+    orderBy: { categoryId: "asc" },
+  });
 
-  return {
-    email: user.email,
-    name: user.name,
-    preferCategory: preferFoods,
-  };
+  return preferences;
 };
+

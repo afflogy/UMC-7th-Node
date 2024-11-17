@@ -22,15 +22,15 @@ export const userRegister = async (data) => {
     throw new DuplicateUserEmailError("이미 존재하는 이메일입니다.");
   }
 
-  if (data.preferences && Array.isArray(data.preferences)) {
-    for (const preference of data.preferences) {
+  if (data.preference && Array.isArray(data.preference)) {
+    for (const preference of data.preference) {
       await setPreference(joinUserId, preference);
   }
 
   const user = await getUserById(joinUserId);
-  const preference = await getUserPreferenceByUserId(joinUserId);
+  const preferences = await getUserPreferenceByUserId(joinUserId);
 
-  return responseFromUser({ user, preference });
+  return responseFromUser({ user, preferences });
   }
 };
 
