@@ -4,6 +4,68 @@ import { bodyToReview } from "../dtos/review.dto.js";
 
 // 가게에 리뷰 생성 API
 export const handleAddReview = async (req, res, next) => {
+  /*
+  #swagger.summary = '리뷰 생성 API';
+  #swagger.requestBody = {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            title: { type: "string", example: "맛있어요." },
+            content: { type: "string", example: "별점 5점" },
+            score: { type: "number", example: 4.5 } }
+          } 
+        }
+      }
+    }
+  };
+  #swagger.responses[200] = {
+    description: "회원 가입 성공 응답",
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            resultType: { type: "string", example: "SUCCESS" },
+            error: { type: "object", nullable: true, example: null },
+            success: {
+              type: "object",
+              properties: {
+                title: {type: "string" },
+                content: { type: "string" },
+                score: { type: "number" } }
+              }
+            }
+          }
+        }
+      }
+    }
+  };
+  #swagger.responses[400] = {
+    description: "리뷰 생성 실패 응답",
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            resultType: { type: "string", example: "FAIL" },
+            error: {
+              type: "object",
+              properties: {
+                errorCode: { type: "string", example: "U003" },
+                reason: { type: "string" },
+                data: { type: "object" }
+              }
+            },
+            success: { type: "object", nullable: true, example: null }
+          }
+        }
+      }
+    }
+  };
+*/
   console.log("body:", req.body);
 
     const storeId  = parseInt(req.params.storeId, 10);
