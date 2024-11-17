@@ -29,20 +29,16 @@ export const getReviewById = async (reviewId) => {
 export const getUserReview = async (userId) => {
   const reviews = await prisma.review.findMany({
       where: {
-        id: userId
+        userId: userId
       },
       include: {
         store: {
           select: {
+            id: true,
             name: true,
             storeAddress: true
           }
         },
-        user: {
-          select: {
-            name: true
-          }
-        }
       },
       orderBy: {
         createdAt: 'desc'

@@ -36,7 +36,8 @@ export const handleGetUserReview = async (req, res, next) => {
                       type: "object",
                       properties: {
                         reviewId: { type: "number" },
-                        store: { type: "object", properties: { id: { type: "number" }, name: { type: "string" } } },
+                        store: { type: "object", properties: { name: { type: "string" }, storeAddress: {type: "string"} } },
+                        user: { type: "object", properties: { name: { type: "string" } } },
                         content: { type: "string" },
                         score: { type: "number"}
                       }
@@ -53,6 +54,9 @@ export const handleGetUserReview = async (req, res, next) => {
   */
 
   const userId = parseInt(req.params.userId, 10);
-  const result = await getUserReviewService(userId);
+  const cursor = req.query.cursor ? parseInt(req.query.cursor, 10) : null;
+  const limit = req.query.limit ? parseInt(req.query.limit, 10) : 10;
+
+  const result = await getUserReviewService(userId, cursor, limit);
   res.status(StatusCodes.OK).success(result);
 };

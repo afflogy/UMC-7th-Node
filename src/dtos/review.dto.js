@@ -25,17 +25,22 @@ export const responseFromReview = ({ review }) => {
 
 // 사용자 리뷰 리스트 조회
 export const responseFromReviewList = ({ reviews }) => {
-  return{
-    reviewId: reviews.id,
-    name: reviews.store.name,
-    storeAddress: reviews.store.storeAddress,
-    title: reviews.title,
-    content: reviews.content,
-    score: reviews.score,
-    image: reviews.image || null,
-    createdAt: reviews.createdAt
-  };
+  const reviewList = reviews.map((review) => ({
+    reviewId: review.id,
+    store: {
+      id: review.store.id,
+      name: review.store.name,
+    },
+    content: review.content,
+    score: review.score,
+  }));
 
+  return {
+    data: reviewList,
+    pagination: {
+      cursor: reviews.length > 0 ? reviews[reviews.length - 1].id : null,
+    },
+  };
 };
 
 

@@ -27,13 +27,14 @@ export const addReviewService = async (data) => {
 };
 
 // 사용자 리뷰 리스트 조회
-export const getUserReviewService = async (userId) => {
+export const getUserReviewService = async (userId, cursor, limit) => {
   try{
-    const reviews = await getUserReview(userId);
+    const reviews = await getUserReview(userId, cursor, limit);
 
-    if(reviews === null){
+    if (!reviews || reviews.length === 0) {
       throw new Error("리뷰가 없습니다.");
     }
+
     return responseFromReviewList({ reviews });
   } catch (error) {
     console.error(error);
