@@ -12,9 +12,10 @@ export const handleAddStore = async (req, res, next) => {
         schema: {
           type: "object",
           properties: {
-            title: { type: "string", example: "맛있어요." },
-            content: { type: "string", example: "별점 5점" },
-            score: { type: "number", example: 4.5 } }
+            name: { type: "string", example: "서브웨이" },
+            storeNum: { type: "string", example: "02-436-0000" },
+            region: { type: "string", example: "서울" },
+            storeAddress: { type: "string", example: "노해로 654-2" } }
           } 
         }
       }
@@ -31,9 +32,10 @@ export const handleAddStore = async (req, res, next) => {
             success: {
               type: "object",
               properties: {
-                title: {type: "string" },
-                content: { type: "string" },
-                score: { type: "number" } }
+                name: { type: "string", example: "서브웨이" },
+                storeNum: { type: "string", example: "02-436-0000" },
+                region: { type: "string", example: "서울" },
+                storeAddress: { type: "string", example: "노해로 654-2" } }
               }
             }
           }
@@ -69,5 +71,4 @@ export const handleAddStore = async (req, res, next) => {
 
   const store = await addStoreService(bodyToStore(req.body));
   res.status(StatusCodes.CREATED).create(store)
-
 };
