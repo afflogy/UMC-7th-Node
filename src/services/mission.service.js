@@ -12,24 +12,19 @@ import { InvalidMission } from "../errors.js"
 
 // 미션 생성 API
 export const addMissionService = async (data) => {
-  try{
-    const missionId = await addMission({
-        storeId: data.storeId,
-        content: data.content,
-        mAmount: data.mAmount,
-        mPoint: data.mPoint,
-    });
+  const missionId = await addMission({
+      storeId: data.storeId,
+      content: data.content,
+      mAmount: data.mAmount,
+      mPoint: data.mPoint,
+  });
 
-    if(!missionId) {
-      throw new InvalidMission("미션을 생성할 수 없습니다.", data);
-    }
-
-    const mission = await getMissionById(missionId);
-    return responseFromMission({ mission });
-  } catch(error) {
-    console.error(error);
-    throw error;
+  if(!missionId || missionId === null) {
+    throw new InvalidMission("미션을 생성할 수 없습니다.", data);
   }
+
+  const missions = await getMissionById(missionId);
+  return responseFromMission({ missions });
 };
 
   //미션 도전중으로 변경 API

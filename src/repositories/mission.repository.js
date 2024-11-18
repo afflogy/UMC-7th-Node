@@ -2,14 +2,15 @@ import { prisma } from "../db.config.js";
 
 // 미션 생성 API
 export const addMission = async (data) => {
-  const store = await prisma.store.findFirst({where: {id: data.storeId}});
-  if(store){
-    null;
+  const stores = await prisma.store.findFirst({where: {id: data.storeId}});
+
+  if(stores){
+    return null;
   }
 
   const created = await prisma.mission.create({
     data: {
-      storeId: store.id,
+      storeId: stores.id,
       content: data.content,
       mAmount: data.mAmount,
       mPoint: data.mPoint
@@ -19,8 +20,8 @@ export const addMission = async (data) => {
 };
 
 export const getMissionById = async (missionId) => {
-  const mission = await prisma.mission.findFirstOrThrow({where: {id: missionId}})
-  return mission;
+  const missions = await prisma.mission.findFirstOrThrow({where: {id: missionId}})
+  return missions;
 };
 
 //도전 중인 미션 변경 API

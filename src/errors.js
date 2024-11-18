@@ -1,5 +1,6 @@
 export class DuplicateUserEmailError extends Error {
-    errorCode = "U001";
+    errorCode = "400_U001";
+    statusCode = 400;
   
     constructor(reason, data) {
       super(reason);
@@ -9,7 +10,8 @@ export class DuplicateUserEmailError extends Error {
   }
 
 export class DuplicateStoreError extends Error {
-  errorCode = "U002";
+  errorCode = "400_S001";
+  statusCode = 400;
   
   constructor(reason, data) {
     super(reason);
@@ -19,7 +21,8 @@ export class DuplicateStoreError extends Error {
 }
 
 export class InvalidReview extends Error {
-  errorCode = "U003";
+  errorCode = "400_R001";
+  statusCode = 400;
   
   constructor(reason, data) {
     super(reason);
@@ -30,7 +33,8 @@ export class InvalidReview extends Error {
 
 
 export class InvalidMission extends Error {
-  errorCode = "U004";
+  errorCode = "400_M001";
+  statusCode = 400;
   
   constructor(reason, data) {
     super(reason);

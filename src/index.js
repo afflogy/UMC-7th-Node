@@ -65,6 +65,7 @@ app.use((req, res, next) => {
 // Case2 'Request header field x-auth-token..' 프론트 엔드에서 보내는 header 정보 확인 : {allowedHeaders: ["x-auth-token", ...],}
 app.use(cors());
 
+
 // express
 app.use(express.static('public'));          // 정적 파일 접근
 app.use(express.json());                    // request의 본문을 json으로 해석할 수 있도록 함 (JSON 형태의 요청 body를 파싱하기 위함)
@@ -103,10 +104,10 @@ app.get("/openapi.json", async (req, res, next) => {
 });
 
 
-// API 설정
-app.get('/', (req, res) => {
-  res.send('Hello UMC Sooni!');
-});
+// // API 설정
+// app.get('/', (req, res) => {
+//   res.send('Hello UMC Sooni!');
+// });
 
 // 회원가입 API
 app.post("/api/account/register", handleUserRegister);
@@ -133,11 +134,11 @@ app.get("/api/stores/:storeId/mission", handleGetStoreMission);
 app.get("/api/users/:userId/mission/:state", handleGetUserOngoingMission);
 
 
-
 /**
  * 전역 오류를 처리하기 위한 미들웨어
  */
 app.use((err, req, res, next) => {
+  console.error(`[${new Date().toISOString()}] Error:`, err); // 모든 에러 기록
   if (res.headersSent) {
     return next(err);
   }

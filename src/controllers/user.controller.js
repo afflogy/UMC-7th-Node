@@ -58,7 +58,7 @@ export const handleUserRegister = async (req, res, next) => {
               error: {
                 type: "object",
                 properties: {
-                  errorCode: { type: "string", example: "U001" },
+                  errorCode: { type: "string", example: "400_U001" },
                   reason: { type: "string" },
                   data: { type: "object" }
                 }

@@ -19,16 +19,15 @@ export const handleAddReview = async (req, res, next) => {
           } 
         }
       }
-    }
-  };
-  #swagger.responses[200] = {
-    description: "회원 가입 성공 응답",
+    };
+  #swagger.responses[201] = {
+    description: "리뷰 생성 성공 응답",
     content: {
       "application/json": {
         schema: {
           type: "object",
           properties: {
-            resultType: { type: "string", example: "SUCCESS" },
+            resultType: { type: "string", example: "CREATE" },
             error: { type: "object", nullable: true, example: null },
             success: {
               type: "object",
@@ -41,8 +40,7 @@ export const handleAddReview = async (req, res, next) => {
           }
         }
       }
-    }
-  };
+    };
   #swagger.responses[400] = {
     description: "리뷰 생성 실패 응답",
     content: {
@@ -54,7 +52,7 @@ export const handleAddReview = async (req, res, next) => {
             error: {
               type: "object",
               properties: {
-                errorCode: { type: "string", example: "U003" },
+                errorCode: { type: "string", example: "400_R001" },
                 reason: { type: "string" },
                 data: { type: "object" }
               }
@@ -65,8 +63,8 @@ export const handleAddReview = async (req, res, next) => {
       }
     }
   };
-*/
-  console.log("body:", req.body);
+  */
+    console.log("body:", req.body);
 
     const storeId  = parseInt(req.params.storeId, 10);
     const userId  = parseInt(req.params.userId, 10);

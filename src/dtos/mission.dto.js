@@ -8,13 +8,13 @@ export const bodyToMission = (body, storeId) => {
 };
 
 
-export const responseFromMission = ({ mission }) => {
+export const responseFromMission = ({ missions }) => {
     return{
-        missionId: mission.id,
-        storeId: mission.storeId,
-        content: mission.content,
-        mAmount: mission.mAmount,
-        mPoint: mission.mPoint
+        missionId: missions.id,
+        storeId: missions.storeId,
+        content: missions.content,
+        mAmount: missions.mAmount,
+        mPoint: missions.mPoint
     }
 };
 

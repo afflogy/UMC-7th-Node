@@ -3,7 +3,7 @@ import { prisma } from "../db.config.js";
 // 가게 리뷰 작성 기능
 export const addReview = async (data) => {
   const store = await prisma.store.findFirst({where: {id: data.storeId}});
-  if (store) {
+  if (!store) {
     return null;
   }
   
@@ -21,7 +21,7 @@ export const addReview = async (data) => {
 };
 
 export const getReviewById = async (reviewId) => {
-    const review = await prisma.review.findFirstOrThrow({where: {id: reviewId.id}})
+    const review = await prisma.review.findFirstOrThrow({where: {id: reviewId}})
     return review;
 };
 
