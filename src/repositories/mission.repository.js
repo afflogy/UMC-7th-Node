@@ -4,13 +4,13 @@ import { prisma } from "../db.config.js";
 export const addMission = async (data) => {
   const stores = await prisma.store.findFirst({where: {id: data.storeId}});
 
-  if(stores){
+  if(!stores){
     return null;
   }
 
   const created = await prisma.mission.create({
     data: {
-      storeId: stores.id,
+      storeId: data.storeId,
       content: data.content,
       mAmount: data.mAmount,
       mPoint: data.mPoint
@@ -36,7 +36,7 @@ export const setOngoingMission = async (userId, missionId) => {
     });
     return createdMission;
   } else {
-    return existingMission;
+    return null;
   }
 };
 

@@ -2,15 +2,15 @@ import { prisma } from "../db.config.js";
 
 // 가게 리뷰 작성 기능
 export const addReview = async (data) => {
-  const store = await prisma.store.findFirst({where: {id: data.storeId}});
-  if (!store) {
+  const stores = await prisma.store.findFirst({where: {id: data.storeId}});
+  if (!stores) {
     return null;
   }
   
   const created = await prisma.review.create({
     data: {
       userId: data.userId,
-      storeId: store.id,
+      storeId: data.storeId,
       title: data.title,
       content: data.content,
       score: data.score,

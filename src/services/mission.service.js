@@ -6,7 +6,8 @@ import { addMission,
          
 import { responseFromMission,
          responseFromStoreMission,
-         responseFromUserMissionList } from "../dtos/mission.dto.js";
+         responseFromUserMissionList,
+         responseFromMissionState } from "../dtos/mission.dto.js";
 
 import { InvalidMission } from "../errors.js"
 
@@ -27,50 +28,36 @@ export const addMissionService = async (data) => {
   return responseFromMission({ missions });
 };
 
-  //미션 도전중으로 변경 API
-export const makeMissionOngoingService = async (userId, missionId) => {
-  try {
-    const mission = await setOngoingMission(userId, missionId);
 
-    if (!mission) {
-      throw new InvalidMission("미션을 도전 중 상태로 설정할 수 없습니다.", { userId, missionId });
+//미션 도전중으로 변경 API
+export const makeMissionOngoingService = async (userId, missionId) => {
+    const missions = await setOngoingMission(userId, missionId);
+
+    if (!missions) {
+      throw new InvalidMission("미션을 이미 도전하고 있습니다.", { userId, missionId });
     }
 
-    return responseFromMission({ mission });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+    return responseFromMissionState({ missions });
 };
 
 
 // 미션 목록 조회
-export const getStoreMissionService = async (storeId) => {
-  try {
+export const getStoreMissionService = async (storeId, cursor, limit) => {
     const missions = await getStoreMission(storeId);
 
-    if(!missions || missions.length === 0){
+    if(missions.length === 0){
       throw new InvalidMission ("미션이 없습니다.");
     }
 
   return responseFromStoreMission({ missions });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
 };
 
 // 진행 중인 미션 조회
-export const getUserOngoingMissionService = async(userId, state) => {
-  try{
-    const ongoingMissions = await getUserOngoingMissions(userId, state);
+export const getUserOngoingMissionService = async(userId, state, cursor, limit) => {
+  const ongoingMissions = await getUserOngoingMissions(userId, state);
 
-    if(!ongoingMissions || ongoingMissions.length === 0){
-      throw new InvalidMission ("진행 중인 미션이 존재하지 않습니다.");
-    }
-  return responseFromUserMissionList({ missions: ongoingMissions });
-  } catch (error) {
-    console.error(error);
-    throw error;
+  if(ongoingMissions.length === 0){
+    throw new InvalidMission ("진행 중인 미션이 존재하지 않습니다.");
   }
+  return responseFromUserMissionList({ missions: ongoingMissions });
 };
