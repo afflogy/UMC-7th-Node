@@ -23,11 +23,17 @@ import session from "express-session";
 import passport from "passport";
 import { googleStrategy } from "./oauth.config.js";
 import { prisma } from "./db.config.js";
-
+import { kakaoStrategy } from "./oauth.config.js";
 
 dotenv.config();
 
+// 구글 passport
 passport.use(googleStrategy);
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user, done) => done(null, user));
+
+// kakao passport
+passport.use(kakaoStrategy);
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
@@ -140,7 +146,7 @@ app.get('/', (req, res) => {
   res.send('Hello UMC Sooni!');
 });
 
-// 인증
+// 구글 인증
 app.get("/oauth2/login/google", passport.authenticate("google"));
 app.get(
   "/oauth2/callback/google",
@@ -150,6 +156,19 @@ app.get(
   }),
   (req, res) => {
     res.redirect("/");
+  }
+);
+
+// 카카오 인증
+app.get("/oauth2/login/kakao", passport.authenticate("kakao"));
+app.get(
+  "/oauth2/callback/kakao",
+  passport.authenticate("kakao", {
+    failureRedirect: "/oauth2/login/kakao", // 실패 시 리다이렉트 경로
+    failureMessage: true,
+  }),
+  (req, res) => {
+    res.redirect("/"); // 성공 시 리다이렉트 경로
   }
 );
 
