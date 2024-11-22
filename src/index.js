@@ -18,7 +18,18 @@ import { handleAddReview, handleGetUserReview } from "./controllers/review.contr
 import { handleAddMission } from "./controllers/mission.controller.js"
 import { handleOngoingMission, handleGetStoreMission, handleGetUserOngoingMission } from "./controllers/mission.controller.js"
 
+import { PrismaSessionStore } from "@quixo3/prisma-session-store";
+import session from "express-session";
+import passport from "passport";
+import { googleStrategy } from "./oauth.config.js";
+import { prisma } from "./db.config.js";
+
+
 dotenv.config();
+
+passport.use(googleStrategy);
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user, done) => done(null, user));
 
 const app = express();
 const port = process.env.PORT;
@@ -59,18 +70,6 @@ app.use((req, res, next) => {
 });
 
 
-
-// cors 방식 허용
-// Case1 'Access-Control-Allow-Origin' header..' 특정 프론트엔드 주소 허용 시 : {origin: ["<프론트엔드_주소_및_포트>"],} 처럼 설정해준다.
-// Case2 'Request header field x-auth-token..' 프론트 엔드에서 보내는 header 정보 확인 : {allowedHeaders: ["x-auth-token", ...],}
-app.use(cors());
-
-
-// express
-app.use(express.static('public'));          // 정적 파일 접근
-app.use(express.json());                    // request의 본문을 json으로 해석할 수 있도록 함 (JSON 형태의 요청 body를 파싱하기 위함)
-app.use(express.urlencoded({ extended: false })); // 단순 객체 문자열 형태로 본문 데이터 해석
-
 // swagger - 접속 url : http://localhost:3000/docs/#
 app.use(
   "/docs",
@@ -104,10 +103,55 @@ app.get("/openapi.json", async (req, res, next) => {
 });
 
 
+// cors 방식 허용
+// Case1 'Access-Control-Allow-Origin' header..' 특정 프론트엔드 주소 허용 시 : {origin: ["<프론트엔드_주소_및_포트>"],} 처럼 설정해준다.
+// Case2 'Request header field x-auth-token..' 프론트 엔드에서 보내는 header 정보 확인 : {allowedHeaders: ["x-auth-token", ...],}
+app.use(cors());
+
+// express
+app.use(express.static('public'));          // 정적 파일 접근
+app.use(express.json());                    // request의 본문을 json으로 해석할 수 있도록 함 (JSON 형태의 요청 body를 파싱하기 위함)
+app.use(express.urlencoded({ extended: false })); // 단순 객체 문자열 형태로 본문 데이터 해석
+
+
+app.use(
+  session({
+    cookie: {
+      maxAge: 7 * 24 * 60 * 60 * 1000, // ms
+    },
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.EXPRESS_SESSION_SECRET,
+    store: new PrismaSessionStore(prisma, {
+      checkPeriod: 2 * 60 * 1000, // ms : 주기적으로 만료된 세션 삭제
+      dbRecordIdIsSessionId: true, // 세션 ID를 데이터베이스 레코드 ID로 사용
+      dbRecordIdFunction: undefined,
+    }),
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+
 // // API 설정
-// app.get('/', (req, res) => {
-//   res.send('Hello UMC Sooni!');
-// });
+app.get('/', (req, res) => {
+  // #swagger.ignore = true
+  res.send('Hello UMC Sooni!');
+});
+
+// 인증
+app.get("/oauth2/login/google", passport.authenticate("google"));
+app.get(
+  "/oauth2/callback/google",
+  passport.authenticate("google", {
+    failureRedirect: "/oauth2/login/google",
+    failureMessage: true,
+  }),
+  (req, res) => {
+    res.redirect("/");
+  }
+);
 
 // 회원가입 API
 app.post("/api/account/register", handleUserRegister);

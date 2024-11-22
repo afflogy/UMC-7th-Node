@@ -13,10 +13,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Session {
+  id        String   @id @default(uuid())
+  sid       String   @unique
+  data      String   @db.Text
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now())     // 생성 시간
+  updatedAt DateTime @updatedAt          // 업데이트 시간
+
+  @@map("session")
+}
+
 model User {
   id            Int        @id @default(autoincrement())
   name          String        @db.VarChar(10)
-  phoneNum      String        @map("phone_num") @db.VarChar(20)
+  phoneNum      String?       @map("phone_num") @db.VarChar(20)
   email         String        @db.VarChar(30)
   password      String        @db.VarChar(40)
   gender        Int
