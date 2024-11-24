@@ -67,8 +67,7 @@ const googleVerify = async (profile) => {
     const kakaoId = String(profile.id);  // 카카오에서 제공하는 고유 ID
 
     // 이메일이 없는 경우
-    const email = profile._json.kakao_account.email || "unknown"; // 이메일이 없을 수 있음
-
+    const email = profile._json.kakao_account.email || kakaoId; // 이메일이 없을 수 있음
 
     const user = await prisma.user.findFirst({ where: { kakaoId } });
     if (user !== null) {
