@@ -1,0 +1,170 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  sid       String   @unique
+  data      String   @db.Text
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now())     // 생성 시간
+  updatedAt DateTime @updatedAt          // 업데이트 시간
+
+  @@map("session")
+}
+
+model User {
+  id            Int        @id @default(autoincrement())
+  name          String        @db.VarChar(10)
+  phoneNum      String?       @map("phone_num") @db.VarChar(20)
+  email         String        @db.VarChar(30)
+  password      String        @db.VarChar(40)
+  gender        Int
+  birthDate     String        @map("birth_date") @db.VarChar(20)
+  address       String        @db.VarChar(50)
+  activation    Boolean       @default(true)
+  userPoint     Int           @default(0) @map("user_point")
+  createdAt     DateTime      @map("created_at") @default(now())
+  updatedAt     DateTime      @updatedAt @map("updated_at") @default(now())
+  reviews       Review[]
+  missionStates MissionState[]
+  userCategories UserCategory[]
+  pointStates   PointState[]
+  userRegionMissions UserRsgionMission[]
+  payStates     PayState[]
+}
+
+model Mission {
+  id            Int        @id @default(autoincrement())
+  storeId       Int        @map("store_id")
+  content       String        @db.Text
+  mAmount       Int           @map("m_amount")
+  mPoint        Int           @map("m_point")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime?     @updatedAt @map("updated_at")
+  store         Store         @relation(fields: [storeId], references: [id])
+  missionStates MissionState[]
+  pointStates   PointState[]
+}
+
+model Review {
+  id            Int        @id @default(autoincrement())
+  userId        Int        @map("user_id")
+  storeId       Int        @map("store_id")
+  title         String
+  content       String        @db.Text
+  score         Decimal       @db.Decimal(2, 1)
+  image         String?       @db.VarChar(50)
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime?     @updatedAt @map("updated_at")
+  user          User          @relation(fields: [userId], references: [id])
+  store         Store         @relation(fields: [storeId], references: [id])
+}
+
+model Store {
+  id            Int        @id @default(autoincrement())
+  mapId         Int        @map("map_id")
+  name          String        @db.VarChar(30)
+  storeNum      String        @map("store_num")
+  storeAddress  String        @map("store_address")
+  grade         Decimal       @default(0.0) @db.Decimal(2, 1)
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime?     @updatedAt @map("updated_at")
+  map           Map           @relation(fields: [mapId], references: [id])
+  missions      Mission[]
+  reviews       Review[]
+  storeCategories StoreCategory[]
+  payStates     PayState[]
+}
+
+model Map {
+  id            Int        @id @default(autoincrement())
+  region        String
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime?     @updatedAt @map("updated_at")
+  stores        Store[]
+  userRegionMissions UserRsgionMission[]
+}
+
+model MissionState {
+  id            Int        @id @default(autoincrement())
+  missionId     Int        @map("mission_id")
+  userId        Int        @map("user_id")
+  missionState  Boolean       @default(false) @map("mission_state")
+  completedAt   DateTime?     @map("completed_at")
+  mission       Mission       @relation(fields: [missionId], references: [id])
+  user          User          @relation(fields: [userId], references: [id])
+}
+
+model Category {
+  id            Int        @id @default(autoincrement())
+  group         String        @db.VarChar(50)
+  userCategories UserCategory[]
+  storeCategories StoreCategory[]
+}
+
+model UserCategory {
+  userId        Int        @map("user_id")
+  categoryId    Int        @map("category_id")
+  user          User          @relation(fields: [userId], references: [id])
+  category      Category      @relation(fields: [categoryId], references: [id])
+
+  @@id([userId, categoryId])
+}
+
+model StoreCategory {
+  categoryId    Int        @map("category_id")
+  storeId       Int        @map("store_id")
+  category      Category      @relation(fields: [categoryId], references: [id])
+  store         Store         @relation(fields: [storeId], references: [id])
+
+  @@id([categoryId, storeId])
+}
+
+model PointState {
+  id            Int        @id @default(autoincrement())
+  points        Int           @default(0)
+  transactionType TransactionType @default(EARN) @map("transaction_type")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+  missionId     Int        @map("mission_id")
+  userId        Int        @map("user_id")
+  mission       Mission       @relation(fields: [missionId], references: [id])
+  user          User          @relation(fields: [userId], references: [id])
+}
+
+model UserRsgionMission {
+  id            Int        @id @default(autoincrement()) @map("region_mcount_id")
+  completedMissionCount Int   @default(0) @map("completed_mission_count")
+  rewardPoint   Boolean       @default(false) @map("reward_point")
+  mapId         Int        @map("map_id")
+  userId        Int        @map("user_id")
+  map           Map           @relation(fields: [mapId], references: [id])
+  user          User          @relation(fields: [userId], references: [id])
+}
+
+model PayState {
+  id            Int        @id @default(autoincrement()) @map("pay_id")
+  userId        Int        @map("user_id")
+  storeId       Int        @map("store_id")
+  payState      Boolean       @default(false) @map("pay_state")
+  paidAmount    Int?          @map("paid_amount")
+  completedAt   DateTime?     @map("completed_at")
+  user          User          @relation(fields: [userId], references: [id])
+  store         Store         @relation(fields: [storeId], references: [id])
+}
+
+enum TransactionType {
+  EARN
+  USE
+}
