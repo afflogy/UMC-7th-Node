@@ -1,6 +1,12 @@
+import { Store, User, Map } from "@prisma/client";
 import { prisma } from "../db.config.js";
 
-export const addStoreWithRegion = async (data) => {
+export const addStoreWithRegion = async (data: {
+  name: string;
+  storeNum: string;
+  storeAddress: string;
+  region: string;
+}): Promise<number | null> => {
     const map = await prisma.map.findFirst({where: {region: data.region}});
 
     if (!map) {
@@ -24,8 +30,7 @@ export const addStoreWithRegion = async (data) => {
 };
 
 
-export const getStoreById = async (storeId) => {
-  const store = await prisma.store.findFirstOrThrow({where: {id: storeId}})
-  return store;
+export const getStoreById = async (storeId: number): Promise<Store> => {
+  return prisma.store.findFirstOrThrow({where: {id: storeId}});
 };
 

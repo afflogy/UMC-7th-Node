@@ -1,35 +1,41 @@
-// const express = require('express')  // -> CommonJS
+// v2 -> typescript
+import express, { Request, Response, Express, NextFunction } from "express";
 
+// v1 -> javascript
+// const express = require('express')  // -> CommonJS
 // cors
 import cors from "cors";
 import dotenv from "dotenv";
 
 // ES Module
-import express from "express";
+// import express from "express";
 
 //swagger
 import swaggerAutogen from "swagger-autogen";
 import swaggerUiExpress from "swagger-ui-express";
 
 // controllers
-import { handleUserRegister } from "./controllers/user.controller.js";
-import { handleAddStore } from "./controllers/store.controller.js"
-import { handleAddReview, handleGetUserReview } from "./controllers/review.controller.js";
-import { handleAddMission } from "./controllers/mission.controller.js"
-import { handleOngoingMission, handleGetStoreMission, handleGetUserOngoingMission } from "./controllers/mission.controller.js"
+import { handleUserRegister } from "./controllers/user.controller.ts";
+import { handleAddStore } from "./controllers/store.controller.ts"
+import { handleAddReview, handleGetUserReview } from "./controllers/review.controller.ts";
+import { handleAddMission } from "./controllers/mission.controller.ts"
+import { handleOngoingMission, handleGetStoreMission, handleGetUserOngoingMission } from "./controllers/mission.controller.ts"
 
 import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 import session from "express-session";
 import passport from "passport";
-import { googleStrategy } from "./oauth.config.js";
-import { prisma } from "./db.config.js";
+import { googleStrategy } from "./oauth.config.ts";
+import { prisma } from "./db.config.ts";
+import { TypeCastNext } from "mysql2";
 
 
 dotenv.config();
 
 passport.use(googleStrategy);
 passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((user, done) => done(null, user));
+passport.deserializeUser<{ id: string; email: string; name: string }>(
+  (user, done) => done(null, user)
+);
 
 const app = express();
 const port = process.env.PORT;
@@ -89,7 +95,7 @@ app.get("/openapi.json", async (req, res, next) => {
     writeOutputFile: false,
   };
   const outputFile = "/dev/null"; // 파일 출력은 사용하지 않습니다.
-  const routes = ["./src/index.js"];
+  const routes = ["./src/index.ts"]; // typescript에 따라서 index.ts로 변경
   const doc = {
     info: {
       title: "UMC 7th",
@@ -181,7 +187,7 @@ app.get("/api/users/:userId/mission/:state", handleGetUserOngoingMission);
 /**
  * 전역 오류를 처리하기 위한 미들웨어
  */
-app.use((err, req, res, next) => {
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   console.error(`[${new Date().toISOString()}] Error:`, err); // 모든 에러 기록
   if (res.headersSent) {
     return next(err);

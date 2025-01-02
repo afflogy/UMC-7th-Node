@@ -1,4 +1,6 @@
-export const bodyToMission = (body, storeId) => {
+import { Store, Mission, User, MissionState } from "@prisma/client";
+
+export const bodyToMission = (body: any, storeId: Store) => {
     return{
         storeId: storeId,
         content: body.content,
@@ -8,7 +10,7 @@ export const bodyToMission = (body, storeId) => {
 };
 
 
-export const responseFromMission = ({ missions }) => {
+export const responseFromMission = ({ missions }: { missions: Mission }) => {
     return{
         missionId: missions.id,
         storeId: missions.storeId,
@@ -19,7 +21,7 @@ export const responseFromMission = ({ missions }) => {
 };
 
 // 미션을 도전으로 변경 API 반환값
-export const responseFromMissionState = ({ missions }) => {
+export const responseFromMissionState = ({ missions }: { missions: { missionId: Mission, userId: User, missionState: MissionState }}) => {
     return{
         missionId: missions.missionId,
         userId : missions.userId,
@@ -28,7 +30,11 @@ export const responseFromMissionState = ({ missions }) => {
 }
 
 // 가게 미션 목록 조회
-export const responseFromStoreMission = ({ missions }) => {
+type MissionWithStore = Mission & {
+  store: Store;
+};
+
+export const responseFromStoreMission = ({ missions }: { missions: MissionWithStore[] }) => {
     return missions.map(mission => ({
         missionId: mission.id,
         content: mission.content,
@@ -43,16 +49,23 @@ export const responseFromStoreMission = ({ missions }) => {
 };
 
 // 사용자 진행미션 조회
-export const responseFromUserMissionList = ({ missions }) => {
+type MissionWithAllRelations = Mission & {
+    store: Store;
+    user: User;
+    missionState: MissionState;
+  };
+
+export const responseFromUserMissionList = ({ missions }: { missions: MissionWithAllRelations[];
+}) => {
     return missions.map(mission => ({
-        missionId: mission.missionId,
-        userId: mission.userId,
+        missionId: mission.id,
+        userId: mission.user.id,
         store: {
-          name: mission.mission.store.name,
+          name: mission.store.name,
         },
-        content: mission.mission.content,
-        mAmount: mission.mission.mAmount,
-        mPoint: mission.mission.mPoint,
+        content: mission.content,
+        mAmount: mission.mAmount,
+        mPoint: mission.mPoint,
         missionState: mission.missionState,
         createdAt: mission.createdAt,
         updatedAt: mission.updatedAt,

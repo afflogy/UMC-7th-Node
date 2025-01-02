@@ -1,8 +1,9 @@
+import { Request, Response, NextFunction } from "express"
 import { StatusCodes } from "http-status-codes";
 import { bodyToStore } from "../dtos/store.dto.js";
 import { addStoreService } from "../services/store.service.js";
 
-export const handleAddStore = async (req, res, next) => {
+export const handleAddStore = async (req: Request, res: Response, next: NextFunction) => {
 /*
   #swagger.summary = '가게 추가 API';
   #swagger.requestBody = {

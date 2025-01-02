@@ -1,8 +1,10 @@
 export class DuplicateUserEmailError extends Error {
     errorCode = "400_U001";
     statusCode = 400;
+    reason: string;
+    data: string;
   
-    constructor(reason, data) {
+    constructor(reason: string, data: any) {
       super(reason);
       this.reason = reason;
       this.data = data;
@@ -12,22 +14,26 @@ export class DuplicateUserEmailError extends Error {
 export class DuplicateStoreError extends Error {
   errorCode = "400_S001";
   statusCode = 400;
+  reason: string;
+  data: string;
   
-  constructor(reason, data) {
+  constructor(reason: string, data: any) {
     super(reason);
     this.reason = reason;
-      this.data = data;
+    this.data = data;
   }
 }
 
 export class InvalidReview extends Error {
   errorCode = "400_R001";
   statusCode = 400;
+  reason: string;
+  data: string;
   
-  constructor(reason, data) {
+  constructor(reason: string, data: any) {
     super(reason);
     this.reason = reason;
-      this.data = data;
+    this.data = data;
   }
 }
 
@@ -35,10 +41,12 @@ export class InvalidReview extends Error {
 export class InvalidMission extends Error {
   errorCode = "400_M001";
   statusCode = 400;
-  
-  constructor(reason, data) {
+  reason: string;
+  data: string;
+
+  constructor(reason: string, data: any) {
     super(reason);
     this.reason = reason;
-      this.data = data;
+    this.data = data;
   }
 }

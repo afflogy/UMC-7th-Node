@@ -1,5 +1,7 @@
+import { Store, User, Review } from "@prisma/client";
+
 // 가게 리뷰 생성
-export const bodyToReview = (body, storeId, userId) => {
+export const bodyToReview = (body: any, storeId: Store, userId: User) => {
   return{
     storeId: storeId,
     userId: userId,
@@ -10,7 +12,7 @@ export const bodyToReview = (body, storeId, userId) => {
   }
 };
   
-export const responseFromReview = ({ review }) => {
+export const responseFromReview = ({ review }: { review: Review }) => {
     return{
       reviewId: review.id,
       userId: review.userId,
@@ -24,7 +26,11 @@ export const responseFromReview = ({ review }) => {
 };
 
 // 사용자 리뷰 리스트 조회
-export const responseFromReviewList = ({ reviews }) => {
+type ReviewWithStore = Review & {
+  store: Store;
+};
+
+export const responseFromReviewList = ({ reviews }: { reviews: ReviewWithStore[]}) => {
   const reviewList = reviews.map((review) => ({
     reviewId: review.id,
     store: {

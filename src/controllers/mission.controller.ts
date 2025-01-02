@@ -1,12 +1,14 @@
+import { Request, Response, NextFunction } from "express"
 import { StatusCodes } from "http-status-codes";
 import { addMissionService,
          makeMissionOngoingService,
          getStoreMissionService,
          getUserOngoingMissionService } from "../services/mission.service.js";
 import { bodyToMission } from "../dtos/mission.dto.js";
+import { NewExpression } from "typescript";
 
 // 가게에 미션 생성
-export const handleAddMission = async (req, res, next) => {
+export const handleAddMission = async (req: Request, res: Response, next: NextFunction) => {
     /*
   #swagger.summary = '미션 생성 API';
   #swagger.requestBody = {
@@ -77,7 +79,7 @@ export const handleAddMission = async (req, res, next) => {
 };
 
 // 미션을 도전중으로 변경
-export const handleOngoingMission = async (req, res) => {
+export const handleOngoingMission = async (req: Request, res: Response) => {
       /*
   #swagger.summary = '미션 도전중으로 변경 API';
   #swagger.requestBody = {
@@ -141,7 +143,7 @@ export const handleOngoingMission = async (req, res) => {
 };
 
 // 특정 가게 미션 조회
-export const handleGetStoreMission = async (req, res) => {
+export const handleGetStoreMission = async (req: any, res: Response) => {
 /*
   #swagger.summary = '특정 가게 미션 조회 API';
   #swagger.responses[200] = {
@@ -201,7 +203,7 @@ export const handleGetStoreMission = async (req, res) => {
 
 
 // 사용자 진행 중 미션 조회
-export const handleGetUserOngoingMission = async (req, res) => {
+export const handleGetUserOngoingMission = async (req: any, res: Response) => {
 /*
   #swagger.summary = '사용자 진행 중 미션 조회 API';
   #swagger.responses[200] = {

@@ -1,8 +1,14 @@
+import { Mission, MissionState, Store } from "@prisma/client";
 import { prisma } from "../db.config.js";
 
 // 미션 생성 API
-export const addMission = async (data) => {
-  const stores = await prisma.store.findFirst({where: {id: data.storeId}});
+export const addMission = async (data: {
+  storeId: number;
+  content: string;
+  mAmount: number;
+  mPoint: number;
+}): Promise<number | null> => {
+  const stores = await prisma.store.findFirst({where: { id: data.storeId }});
 
   if(!stores){
     return null;
@@ -19,13 +25,12 @@ export const addMission = async (data) => {
   return created.id;
 };
 
-export const getMissionById = async (missionId) => {
-  const missions = await prisma.mission.findFirstOrThrow({where: {id: missionId}})
-  return missions;
+export const getMissionById = async (missionId: number): Promise<Mission> => {
+  return prisma.mission.findFirstOrThrow({where: {id: missionId}});
 };
 
 //도전 중인 미션 변경 API
-export const setOngoingMission = async (userId, missionId) => {
+export const setOngoingMission = async (userId: number, missionId: number): Promise<MissionState | null> => {
   const existingMission = await prisma.missionState.findFirst({
     where: { userId: userId, missionId: missionId, missionState: false },
   });
@@ -42,7 +47,13 @@ export const setOngoingMission = async (userId, missionId) => {
 
 
 // 미션 목록 조회
-export const getStoreMission = async (storeId) => {
+export const getStoreMission = async (
+  storeId: number
+): Promise<
+  (Mission & {
+    store: Pick<Store, "name" | "storeAddress">;
+  })[]
+> => {
   const missions = await prisma.mission.findMany({
     where: {
       storeId: storeId
@@ -64,7 +75,16 @@ export const getStoreMission = async (storeId) => {
 };
 
 // 사용자가 진행 중인 미션 조회
-export const getUserOngoingMissions = async (userId, state) => {
+export const getUserOngoingMissions = async (
+  userId: number, 
+  state: boolean
+): Promise<
+  (MissionState & {
+    mission: Mission & {
+      store: Pick<Store, "name">;
+    };
+  })[]
+  > => {
   const missions = await prisma.missionState.findMany({
     where: {
       userId: userId,

@@ -1,4 +1,6 @@
-export const bodyToUser = ( body ) => {
+import { Category, User, UserCategory } from "@prisma/client";
+
+export const bodyToUser = ( body: any ) => {
     return {
       name: body.name,
       phoneNum: body.phoneNum,
@@ -13,7 +15,8 @@ export const bodyToUser = ( body ) => {
 
 
 // 사용자 선호 카테고리 반환
-export const responseFromUser = async ({ user, preferences }) => {
+export const responseFromUser = async ({ user, preferences }: { user: User, preferences: (UserCategory & { category: Category})[];
+}) => {
   const preferFoods = preferences.map(
     (pref) => pref.category.group
   );

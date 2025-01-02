@@ -1,4 +1,6 @@
-export const bodyToStore = (body) => {
+import { Store, Map } from "@prisma/client";
+
+export const bodyToStore = (body: any) => {
    return{
       name: body.name,
       storeNum: body.storeNum,
@@ -7,7 +9,8 @@ export const bodyToStore = (body) => {
    };
  };
   
- export const responseFromStore = ({ store }) => {
+ export const responseFromStore = ({ store }: { store: ( Store & { region: Map });
+}) => {
    return{
       storeId: store.id,
       mapId: store.mapId,

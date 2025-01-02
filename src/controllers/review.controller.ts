@@ -1,9 +1,10 @@
+import { Request, Response, NextFunction } from "express"
 import { StatusCodes } from "http-status-codes";
 import { addReviewService, getUserReviewService } from "../services/review.service.js";
 import { bodyToReview } from "../dtos/review.dto.js";
 
 // 가게에 리뷰 생성 API
-export const handleAddReview = async (req, res, next) => {
+export const handleAddReview = async (req: Request, res: Response, next: NextFunction) => {
   /*
   #swagger.summary = '리뷰 생성 API';
   #swagger.requestBody = {
@@ -75,7 +76,7 @@ export const handleAddReview = async (req, res, next) => {
 
 
 // 사용자 리뷰 리스트 조회 API
-export const handleGetUserReview = async (req, res, next) => {
+export const handleGetUserReview = async (req: Request, res: Response, next: NextFunction) => {
     /*
     #swagger.summary = '사용자 리뷰 목록 조회 API';
     #swagger.responses[200] = {

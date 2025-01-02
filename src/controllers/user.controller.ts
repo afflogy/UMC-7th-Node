@@ -1,8 +1,9 @@
+import { Request, Response, NextFunction } from "express"
 import { StatusCodes } from "http-status-codes";
 import { bodyToUser } from "../dtos/user.dto.js";
 import { userRegister } from "../services/user.service.js";
 
-export const handleUserRegister = async (req, res, next) => {
+export const handleUserRegister = async (req: Request, res: Response, next: NextFunction) => {
     /*
     #swagger.summary = '회원 가입 API';
     #swagger.requestBody = {
